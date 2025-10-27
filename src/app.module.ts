@@ -21,12 +21,10 @@ import { AutoescolaModule } from './autoescola/autoescola.module';
       password: process.env.DB_PASS,
       database: process.env.DB_NAME,
       entities: [__dirname + '/**/entity/*.entity.{ts,js}'],
-      synchronize: process.env.NODE_ENV !== 'production',
+      synchronize: process.env.NODE_ENV !== 'production',      
     }),
 
      AutoescolaModule,
-
-
 
   ],
   controllers: [AppController],
