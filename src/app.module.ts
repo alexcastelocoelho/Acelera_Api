@@ -5,6 +5,9 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AutoescolaModule } from './autoescola/autoescola.module';
 import { VeiculoModule } from './veiculo/veiculo.module';
+import { InstrutorModule } from './instrutor/instrutor.module';
+
+
 
 
 @Module({
@@ -28,6 +31,8 @@ import { VeiculoModule } from './veiculo/veiculo.module';
      AutoescolaModule,
 
      VeiculoModule,
+
+     InstrutorModule,       
 
   ],
   controllers: [AppController],
