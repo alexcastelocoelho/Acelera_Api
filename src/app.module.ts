@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AutoescolaModule } from './autoescola/autoescola.module';
+import { VeiculoModule } from './veiculo/veiculo.module';
 
 
 @Module({
@@ -25,6 +26,8 @@ import { AutoescolaModule } from './autoescola/autoescola.module';
     }),
 
      AutoescolaModule,
+
+     VeiculoModule,
 
   ],
   controllers: [AppController],
