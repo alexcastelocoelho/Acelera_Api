@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AutoescolaModule } from './autoescola/autoescola.module';
 import { VeiculoModule } from './veiculo/veiculo.module';
 import { InstrutorModule } from './instrutor/instrutor.module';
+import { AlunoModule } from './aluno/aluno.module';
 
 
 
@@ -32,7 +33,9 @@ import { InstrutorModule } from './instrutor/instrutor.module';
 
      VeiculoModule,
 
-     InstrutorModule,       
+     InstrutorModule,  
+     
+     AlunoModule
 
   ],
   controllers: [AppController],
