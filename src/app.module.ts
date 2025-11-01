@@ -7,6 +7,7 @@ import { AutoescolaModule } from './autoescola/autoescola.module';
 import { VeiculoModule } from './veiculo/veiculo.module';
 import { InstrutorModule } from './instrutor/instrutor.module';
 import { AlunoModule } from './aluno/aluno.module';
+import { AulaPraticaModule } from './aula-pratica/aula-pratica.module';
 
 
 
@@ -35,7 +36,9 @@ import { AlunoModule } from './aluno/aluno.module';
 
      InstrutorModule,  
      
-     AlunoModule
+     AlunoModule,
+
+     AulaPraticaModule
 
   ],
   controllers: [AppController],
