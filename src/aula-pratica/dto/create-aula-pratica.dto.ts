@@ -1,4 +1,5 @@
-import { IsEnum, IsNotEmpty, IsString, Matches } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsString, IsUUID, Matches } from 'class-validator';
+import { Instrutor } from 'src/entity/Instrutor.entity';
 import { TipoAula } from 'src/enums/Tipo-aula.enum';
 
 export class CreateAulaPraticaDto { 
@@ -9,6 +10,9 @@ export class CreateAulaPraticaDto {
     message: 'data deve estar no formato DD/MM/YYYY',
   })
   data: string;
+   
+  @IsUUID('4', { message: 'Informar o instrutor da aula' })
+  instrutor: string;
 
   @IsNotEmpty({ message: 'informar hora da aula' })
   @IsString({ message: 'hora deve estar no formato HH:mm' })
