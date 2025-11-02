@@ -7,6 +7,7 @@ import {
   IsEmail,
   Matches,
   MinLength,
+  IsUUID,
 } from 'class-validator';
 import { Genero } from 'src/enums/Genero.enum';
 
@@ -45,4 +46,9 @@ export class CreateAlunoDto {
   @IsNotEmpty({ message: 'Informar email do aluno' })
   @IsEmail({}, { message: 'Email inválido' })
   email: string;
+}
+
+export class createMatriculaAlunoAulaDto{
+  @IsUUID('4', { message: 'Informar o aluno da aula' })
+    aluno: string;
 }
