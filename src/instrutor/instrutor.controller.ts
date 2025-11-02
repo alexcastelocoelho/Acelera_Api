@@ -19,16 +19,18 @@ export class InstrutorController {
     return this.instrutorService.findAll();
   }
 
-  @Get(":id/aulas")
-  @HttpCode(200)
-  listarInstrutoraes(@Param('id') id: string) {
-    return this.instrutorService.listarAulasInstrutor(id);
-  }
+  
 
   @Get(':id')
   @HttpCode(200)
   listarUmInstrutor(@Param('id') id: string) {
     return this.instrutorService.findOne(id);
+  }
+
+  @Get(":id/aulas")
+  @HttpCode(200)
+  listarAulasInstrutoraes(@Param('id') id: string) {
+    return this.instrutorService.listarAulasInstrutor(id);
   }
 
   @Patch(':id')

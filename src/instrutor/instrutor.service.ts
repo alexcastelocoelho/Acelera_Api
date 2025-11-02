@@ -11,7 +11,7 @@ import { validate } from 'uuid';
 import { NotFoundError } from 'src/errors/Notfound.exception';
 import { toZonedTime, format } from 'date-fns-tz';
 import { ConflictError } from 'src/errors/Conflict.Exception';
-import { ResponseAulapraticaDto } from 'src/aula-pratica/dto/response-aula-pratica.dto';
+import { ResponseAulapraticaInstrutorDto } from 'src/aula-pratica/dto/response-aula-pratica.dto';
 
 @Injectable()
 export class InstrutorService {
@@ -64,38 +64,7 @@ export class InstrutorService {
     return instrutoresResponse;
   }
 
-   async listarAulasInstrutor(id: string): Promise<ResponseInstrutorAulasDto> {    
-    if (!validate(id)) {
-      throw new BadRequestException('Valor do id inválido ou longo demais');
-    }
-
-    const instrutor = await this.instrutorRepository.findOne({
-      where: { id },
-      relations: ['aulasPraticas'],
-    });
-
-    if (!instrutor) {
-      throw new NotFoundError('Instrutor não localizado');
-    }
-
-    
-    const aulasResponse: ResponseAulapraticaDto[] = instrutor.aulasPraticas.map(aula => ({
-      id: aula.id,
-      data: format(toZonedTime(aula.data, 'UTC'), 'dd/MM/yyyy'),
-      horaInicio: aula.horaInicio,
-      horaFim: aula.horaFim,
-      tipoAula: aula.tipoAula,
-    }));
-    
-    const instrutorResponse: ResponseInstrutorAulasDto = {
-      id: instrutor.id,
-      nome: instrutor.nome,
-      cpf: instrutor.cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4'),            
-      aulasPraticas: aulasResponse,
-    };
-
-    return instrutorResponse;
-  }
+   
 
   async findOne(id: string) {
     if (!validate(id)) {
@@ -115,6 +84,40 @@ export class InstrutorService {
       genero: instrutor.genero,
       telefone: instrutor.telefone,
       tipoCnh: instrutor.tipoCnh,
+    };
+
+    return instrutorResponse;
+  }
+
+  async listarAulasInstrutor(id: string): Promise<ResponseInstrutorAulasDto> {    
+    if (!validate(id)) {
+      throw new BadRequestException('Valor do id inválido ou longo demais');
+    }
+
+    const instrutor = await this.instrutorRepository.findOne({
+      where: { id },
+      relations: ['aulasPraticas', 'aulasPraticas.aluno'],
+    });
+
+    if (!instrutor) {
+      throw new NotFoundError('Instrutor não localizado');
+    }
+
+    
+    const aulasResponse: ResponseAulapraticaInstrutorDto[] = instrutor.aulasPraticas.map(aula => ({
+      id: aula.id,
+      aluno: aula.aluno.nome,
+      data: format(toZonedTime(aula.data, 'UTC'), 'dd/MM/yyyy'),
+      horaInicio: aula.horaInicio,
+      horaFim: aula.horaFim,
+      tipoAula: aula.tipoAula,
+    }));
+    
+    const instrutorResponse: ResponseInstrutorAulasDto = {
+      id: instrutor.id,
+      nome: instrutor.nome,
+      cpf: instrutor.cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4'),            
+      aulasPraticas: aulasResponse,
     };
 
     return instrutorResponse;
