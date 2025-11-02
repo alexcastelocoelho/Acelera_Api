@@ -1,5 +1,6 @@
-import {  Entity,PrimaryGeneratedColumn,Column,Unique,} from 'typeorm';
+import {  Entity,PrimaryGeneratedColumn,Column,Unique, OneToMany,} from 'typeorm';
 import { Genero } from 'src/enums/Genero.enum';
+import { AulaPratica } from './AulaPratica.entity';
 
 
 @Entity('alunos')
@@ -27,4 +28,7 @@ export class Aluno {
 
   @Column()
   email: string;
+
+  @OneToMany(() => AulaPratica, (aulaPratica) => aulaPratica.aluno)
+  aulasPraticas: AulaPratica[];
 }

@@ -7,6 +7,7 @@ import {
   
 } from 'typeorm';
 import { Instrutor } from './Instrutor.entity';
+import { Aluno } from './Aluno.entity';
 
 @Entity('aulas_praticas')
 export class AulaPratica {  
@@ -33,4 +34,9 @@ export class AulaPratica {
     onDelete: 'SET NULL'
   })
   instrutor: Instrutor;
+
+   @ManyToOne(() => Aluno, (aluno) => aluno.aulasPraticas, {
+    onDelete: 'SET NULL', 
+  })
+  aluno: Aluno;
 }
