@@ -25,11 +25,11 @@ export class AulaPraticaController {
     return this.aulaPraticaService.findOne(id);
   }
 
-  @Patch(':id')
-  @HttpCode(204)
-  atualizarAulaPratica(@Param('id') id: string, @Body() updateAulaPraticaDto: UpdateAulaPraticaDto) {
-    return this.aulaPraticaService.update(id, updateAulaPraticaDto);
-  }
+  // @Patch(':id')
+  // @HttpCode(204)
+  // atualizarAulaPratica(@Param('id') id: string, @Body() updateAulaPraticaDto: UpdateAulaPraticaDto) {
+  //   return this.aulaPraticaService.update(id, updateAulaPraticaDto);
+  // }
 
   @Delete(':id')
   @HttpCode(204)

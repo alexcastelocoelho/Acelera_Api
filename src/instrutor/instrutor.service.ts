@@ -1,16 +1,17 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateInstrutorDto } from './dto/create-instrutor.dto';
 import { UpdateInstrutorDto } from './dto/update-instrutor.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Instrutor } from 'src/entity/Instrutor.entity';
 import { Repository } from 'typeorm';
-import { ResponseInstrutorDto } from './dto/response-instrutor.dto';
+import { ResponseInstrutorAulasDto, ResponseInstrutorDto } from './dto/response-instrutor.dto';
 import { validaCPF } from 'src/utils/ValidaCpf';
 import { BadRequestError } from 'src/errors/Badrequest.exception';
 import { validate } from 'uuid';
 import { NotFoundError } from 'src/errors/Notfound.exception';
 import { toZonedTime, format } from 'date-fns-tz';
 import { ConflictError } from 'src/errors/Conflict.Exception';
+import { ResponseAulapraticaDto } from 'src/aula-pratica/dto/response-aula-pratica.dto';
 
 @Injectable()
 export class InstrutorService {
@@ -61,6 +62,39 @@ export class InstrutorService {
     );
 
     return instrutoresResponse;
+  }
+
+   async listarAulasInstrutor(id: string): Promise<ResponseInstrutorAulasDto> {    
+    if (!validate(id)) {
+      throw new BadRequestException('Valor do id inválido ou longo demais');
+    }
+
+    const instrutor = await this.instrutorRepository.findOne({
+      where: { id },
+      relations: ['aulasPraticas'],
+    });
+
+    if (!instrutor) {
+      throw new NotFoundError('Instrutor não localizado');
+    }
+
+    
+    const aulasResponse: ResponseAulapraticaDto[] = instrutor.aulasPraticas.map(aula => ({
+      id: aula.id,
+      data: format(toZonedTime(aula.data, 'UTC'), 'dd/MM/yyyy'),
+      horaInicio: aula.horaInicio,
+      horaFim: aula.horaFim,
+      tipoAula: aula.tipoAula,
+    }));
+    
+    const instrutorResponse: ResponseInstrutorAulasDto = {
+      id: instrutor.id,
+      nome: instrutor.nome,
+      cpf: instrutor.cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4'),            
+      aulasPraticas: aulasResponse,
+    };
+
+    return instrutorResponse;
   }
 
   async findOne(id: string) {
