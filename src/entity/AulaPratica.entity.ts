@@ -3,8 +3,10 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
+  ManyToOne,
   
 } from 'typeorm';
+import { Instrutor } from './Instrutor.entity';
 
 @Entity('aulas_praticas')
 export class AulaPratica {  
@@ -26,4 +28,9 @@ export class AulaPratica {
     enum: TipoAula,
   })
   tipoAula: TipoAula;
+
+   @ManyToOne(() => Instrutor, instrutor => instrutor.aulasPraticas, {    
+    onDelete: 'SET NULL'
+  })
+  instrutor: Instrutor;
 }

@@ -1,6 +1,7 @@
 import { CategoriaVeiculo } from 'src/enums/categoria-veiculo.enum';
 import { Genero } from 'src/enums/Genero.enum';
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { AulaPratica } from './AulaPratica.entity';
 
 @Entity('instrutores')
 export class Instrutor {
@@ -30,4 +31,7 @@ export class Instrutor {
     enum: CategoriaVeiculo,
   })
   tipoCnh: CategoriaVeiculo;
+
+    @OneToMany(() => AulaPratica, aula => aula.instrutor)
+  aulasPraticas: AulaPratica[];
 }
