@@ -19,6 +19,12 @@ export class AlunoController {
     return this.alunoService.findAll();
   }
 
+  @Get(":id/aulas")
+  @HttpCode(200)
+  listarAulasAlunos(@Param('id') id: string) {
+    return this.alunoService.listarAulasAluno(id);
+  }
+
   @Get(':id')
   @HttpCode(200)
   listarUmAluno(@Param('id') id: string) {

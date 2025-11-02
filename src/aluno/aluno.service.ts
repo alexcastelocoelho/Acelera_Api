@@ -7,16 +7,21 @@ import { Repository } from 'typeorm';
 import { ConflictError } from 'src/errors/Conflict.Exception';
 import { validaCPF } from 'src/utils/ValidaCpf';
 import { BadRequestError } from 'src/errors/Badrequest.exception';
-import { ResponseAlunoDto } from './dto/response-aluno.dto';
+import { ResponseAlunoAulasDto, ResponseAlunoDto } from './dto/response-aluno.dto';
 import { format, toZonedTime } from 'date-fns-tz';
 import { validate } from 'uuid';
 import { NotFoundError } from 'src/errors/Notfound.exception';
+import { AulaPratica } from 'src/entity/AulaPratica.entity';
+import { ResponseAulapraticaInstrutorDto } from 'src/aula-pratica/dto/response-aula-pratica.dto';
+
 
 @Injectable()
 export class AlunoService {
   constructor(
     @InjectRepository(Aluno)
     private readonly alunoRepository: Repository<Aluno>,
+    @InjectRepository(AulaPratica)
+    private readonly aulaPraticaRepository: Repository<AulaPratica>,
   ) {}
 
   private async existsByCpf(cpf: string): Promise<void> {
@@ -80,6 +85,40 @@ export class AlunoService {
 
     return alunoResponse;
   }
+
+  async listarAulasAluno(id: string): Promise<ResponseAlunoAulasDto> {    
+      if (!validate(id)) {
+        throw new BadRequestError('Valor do id inválido ou longo demais');
+      }
+  
+      const aluno = await this.alunoRepository.findOne({
+        where: {id},
+        relations:["aulasPraticas","aulasPraticas.instrutor" ],        
+      });
+  
+      if (!aluno) {
+        throw new NotFoundError('aluno não localizado');
+      }
+  
+      
+      const aulasResponse: ResponseAulapraticaInstrutorDto[] = aluno.aulasPraticas.map(aula => ({
+        id: aula.id,
+        data: format(toZonedTime(aula.data, 'UTC'), 'dd/MM/yyyy'),
+        instrutor: aula.instrutor.nome,
+        horaInicio: aula.horaInicio,
+        horaFim: aula.horaFim,
+        tipoAula: aula.tipoAula,
+      }));
+      
+      const alunoResponse: ResponseAlunoAulasDto = {
+        id: aluno.id,
+        nome: aluno.nome,
+        cpf: aluno.cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4'),            
+        aulasPraticas: aulasResponse,
+      };
+      
+      return alunoResponse;
+    }
 
   async update(id: string, updateAlunoDto: UpdateAlunoDto) {
      if (!validate(id)) {
