@@ -32,7 +32,7 @@
 
 
 ```
-git clone https://github.com/alexcastelocoelho/Backend-Hospitalar
+git clone https://github.com/alexcastelocoelho/Acelera_Api
 ```
 
 <br>
